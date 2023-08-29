@@ -1,7 +1,14 @@
 #!/usr/bin/python3
+"""Define a class Square."""
+
 
 class Square:
-	"""Square class with a private attribute - size"""
-	def __init__(self, size):
-		"""Initialize Square with size attribute"""
-		self.__size = size
+    """Represent a square."""
+
+    def __init__(self, size):
+        """Initialize a  Square.
+
+        Args:
+            size (int): The size of the  square.
+        """
+        self.__size = size
