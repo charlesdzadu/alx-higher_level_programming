@@ -4,10 +4,12 @@
 
 def append_after(filename="", search_string="", new_string=""):
     """Append after function"""
-    with open(filename, mode="r+", encoding="utf-8") as f:
+    with open(filename, 'r+') as f:
         lines = f.readlines()
-        for i in range(len(lines)):
-            if search_string in lines[i]:
+        i = 0
+        for line in lines:
+            if line.find(search_string) is not -1:
                 lines.insert(i + 1, new_string)
+            i += 1
         f.seek(0)
-        f.writelines(lines)
+        f.write("".join(lines))
