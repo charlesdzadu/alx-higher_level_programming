@@ -1,29 +1,18 @@
 #!/usr/bin/python3
+"""  lists all states from the database """
+import MySQLdb
+import sys
 
 
-"""
-lists all cities from the database
-"""
 if __name__ == "__main__":
-
-    import MySQLdb
-    from sys import argv
-
-    count = 0
-    con = MySQLdb.connect(host="localhost", port=3306, user=argv[1],
-                          passwd=argv[2], db=argv[3], charset="utf8")
-    curs = con.cursor()
-    curs.execute("""SELECT cities.id, cities.name, states.name
-    FROM cities
-    LEFT JOIN states ON cities.state_id = states.id
-    ORDER BY cities.id ASC""")
-    query_rows = curs.fetchall()
-    for row in query_rows:
-        if row[2] == argv[4]:
-            if count > 0:
-                print(", ", end="")
-            print(row[1], end="")
-            count = count + 1
-    print()
-    curs.close()
-    con.close()
+    db = MySQLdb.connect(host="localhost", user=sys.argv[1],
+                         passwd=sys.argv[2], db=sys.argv[3], port=3306)
+    cursor = db.cursor()
+    cursor.execute("""SELECT cities.name FROM
+                cities INNER JOIN states ON states.id=cities.state_id
+                WHERE states.name=%s""", (sys.argv[4],))
+    rows = cursor.fetchall()
+    tmp = list(row[0] for row in rows)
+    print(*tmp, sep=", ")
+    cursor.close()
+    db.close()

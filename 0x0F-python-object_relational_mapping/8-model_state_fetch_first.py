@@ -1,26 +1,20 @@
 #!/usr/bin/python3
-
-
+""" prints the first State object
 """
-All states via SQLAlchemy
-"""
-
-from sys import argv
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+import sys
 from model_state import Base, State
+from sqlalchemy import (create_engine)
+from sqlalchemy.orm import sessionmaker
+
 
 if __name__ == "__main__":
-    eng = create_engine(
-        'mysql+mysqldb://{}:{}@localhost/{}'.format(argv[1],
-                                                    argv[2],
-                                                    argv[3]))
-    Base.metadata.create_all(eng)
-    Session = sessionmaker(bind=eng)
+    engi = create_engine('mysql+mysqldb://{}:{}@localhost:3306/{}'
+                         .format(sys.argv[1], sys.argv[2], sys.argv[3]))
+    Base.metadata.create_all(engi)
+    Session = sessionmaker(bind=engi)
     sess = Session()
-    state = sess.query(State).order_by(State.id).first()
-    if state:
-        print("{}: {}".format(state.id, state.name))
-    else:
+    instance = sess.query(State).first()
+    if instance is None:
         print("Nothing")
-    sess.close()
+    else:
+        print(instance.id, instance.name, sep=": ")
